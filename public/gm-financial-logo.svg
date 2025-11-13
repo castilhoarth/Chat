@@ -1,0 +1,10 @@
+<svg width="200" height="40" viewBox="0 0 1024 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- GM Box -->
+  <rect x="0" y="0" width="270" height="200" rx="30" fill="none" stroke="#0057B8" stroke-width="12"/>
+  
+  <!-- GM Letters -->
+  <text x="50" y="155" font-family="Arial, sans-serif" font-size="140" font-weight="bold" fill="#0057B8">gm</text>
+  
+  <!-- FINANCIAL Text -->
+  <text x="320" y="155" font-family="Arial, sans-serif" font-size="120" font-weight="bold" fill="#0057B8" letter-spacing="15">FINANCIAL</text>
+</svg>
