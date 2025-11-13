@@ -99,9 +99,28 @@ const Chatbot = () => {
           data = { response: responseText };
         }
 
+        // Extrair conteúdo da resposta
+        let content = '';
+        
+        if (data.results && Array.isArray(data.results) && data.results.length > 0) {
+          // Formato: {"results": ["texto"], "completionReason": "SUCCESS"}
+          content = data.results.join('\n');
+        } else if (data.response) {
+          // Formato: {"response": "texto"}
+          content = data.response;
+        } else if (data.completion) {
+          content = data.completion;
+        } else if (data.message) {
+          content = data.message;
+        } else if (data.output) {
+          content = data.output;
+        } else {
+          content = responseText;
+        }
+
         const assistantMessage = {
           role: 'assistant',
-          content: data.response || data.completion || data.message || data.output || responseText
+          content: content
         };
         setMessages(prev => [...prev, assistantMessage]);
       }
