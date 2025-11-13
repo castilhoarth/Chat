@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Chatbot.css';
 
-// Lambda configuration - usando proxy local para evitar CORS
-const LAMBDA_URL = '/api';
+// Lambda configuration
+// Em desenvolvimento usa proxy, em produção usa URL direta
+const LAMBDA_URL = import.meta.env.DEV 
+  ? '/api' 
+  : 'https://ypwcnxepbbsojadq7srouhzb2u0elkll.lambda-url.us-west-2.on.aws/';
 
 // Set to false to use real Lambda
 const MOCK_MODE = false;
