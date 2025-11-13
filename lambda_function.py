@@ -6,6 +6,7 @@ import os
 # Environment variables
 AGENT_ID = 'ZOZI3PH32D'
 AGENT_ALIAS_ID = 'LC2IPXGFJV'
+FLOW_ID = os.environ.get('FLOW_ID', '')  # Optional: Flow ID if needed
 AWS_REGION = os.environ.get('AWS_REGION', 'us-west-2')
 
 # Initialize client outside handler for reuse
