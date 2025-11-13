@@ -2,10 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import './Chatbot.css';
 
 // Lambda configuration
-// Em desenvolvimento usa proxy, em produção usa URL direta
-const LAMBDA_URL = import.meta.env.DEV 
-  ? '/api' 
-  : 'https://ypwcnxepbbsojadq7srouhzb2u0elkll.lambda-url.us-west-2.on.aws/';
+// Usa /api que será redirecionado via _redirects (funciona em dev e prod)
+const LAMBDA_URL = '/api';
 
 // Set to false to use real Lambda
 const MOCK_MODE = false;
