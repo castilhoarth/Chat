@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import './Chatbot.css';
 
 // Lambda configuration
-// Usa /api que será redirecionado via _redirects (funciona em dev e prod)
-const LAMBDA_URL = '/api';
+// Em dev usa proxy local, em prod usa Lambda direta
+const LAMBDA_URL = import.meta.env.DEV 
+  ? '/api' 
+  : 'https://ypwcnxepbbsojadq7srouhzb2u0elkll.lambda-url.us-west-2.on.aws/';
 
 // Set to false to use real Lambda
 const MOCK_MODE = false;
@@ -53,6 +55,8 @@ const Chatbot = () => {
       } else {
         // Real Lambda call via proxy
         console.log('Sending to Lambda:', currentInput);
+        console.log('Lambda URL:', LAMBDA_URL);
+        console.log('Environment:', import.meta.env.DEV ? 'Development' : 'Production');
         
         const response = await fetch(LAMBDA_URL, {
           method: 'POST',
@@ -65,6 +69,7 @@ const Chatbot = () => {
         });
 
         console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
         if (!response.ok) {
           const errorText = await response.text();
@@ -90,10 +95,34 @@ const Chatbot = () => {
         setMessages(prev => [...prev, assistantMessage]);
       }
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error('Full error details:', error);
+      console.error('Error name:', error.name);
+      console.error('Error message:', error.message);
+      
+      let errorMessage = '';
+      
+      if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+        errorMessage = `🚫 CORS Error: A Lambda não permite requisições do domínio ${window.location.origin}.\n\n` +
+                      `Solução: Configure CORS na Lambda Function URL no AWS Console.\n` +
+                      `Veja LAMBDA_CORS_FIX.md para instruções detalhadas.`;
+      } else if (error.message.includes('HTTP 400')) {
+        errorMessage = `❌ Erro 400: A Lambda recebeu a requisição mas o formato está incorreto.\n` +
+                      `Detalhes: ${error.message}`;
+      } else if (error.message.includes('HTTP 500')) {
+        errorMessage = `⚠️ Erro 500: Erro interno na Lambda.\n` +
+                      `Detalhes: ${error.message}`;
+      } else if (error.message.includes('HTTP 404')) {
+        errorMessage = `🔍 Erro 404: Lambda URL não encontrada.\n` +
+                      `Verifique se a URL está correta: ${LAMBDA_URL}`;
+      } else {
+        errorMessage = `❌ Erro: ${error.message}\n\n` +
+                      `Tipo: ${error.name}\n` +
+                      `Ambiente: ${import.meta.env.DEV ? 'Development' : 'Production'}`;
+      }
+      
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: `Error: ${error.message}. Make sure your API Gateway endpoint is configured.`
+        content: errorMessage
       }]);
     } finally {
       setLoading(false);

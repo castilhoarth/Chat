@@ -1,1 +1,2 @@
 /api/* https://ypwcnxepbbsojadq7srouhzb2u0elkll.lambda-url.us-west-2.on.aws/:splat 200!
+/*    /index.html   200
