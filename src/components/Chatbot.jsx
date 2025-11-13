@@ -5,7 +5,7 @@ import './Chatbot.css';
 // Em dev usa proxy local, em prod usa Lambda direta
 const LAMBDA_URL = import.meta.env.DEV 
   ? '/api' 
-  : 'https://ypwcnxepbbsojadq7srouhzb2u0elkll.lambda-url.us-west-2.on.aws/';
+  : 'https://e7mufkrkytkmp2jp26if4canqq0fwezy.lambda-url.us-west-2.on.aws/';
 
 // Set to false to use real Lambda
 const MOCK_MODE = false;
