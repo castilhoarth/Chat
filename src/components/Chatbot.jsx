@@ -82,15 +82,26 @@ const Chatbot = () => {
         
         let data;
         try {
-          data = JSON.parse(responseText);
+          // Parse primeira camada
+          const firstParse = JSON.parse(responseText);
+          console.log('First parse:', firstParse);
+          
+          // Se tem body (formato Lambda), parse novamente
+          if (firstParse.body && typeof firstParse.body === 'string') {
+            data = JSON.parse(firstParse.body);
+            console.log('Second parse (body):', data);
+          } else {
+            data = firstParse;
+          }
         } catch (e) {
+          console.error('Parse error:', e);
           // Se não for JSON, usa o texto direto
           data = { response: responseText };
         }
 
         const assistantMessage = {
           role: 'assistant',
-          content: data.completion || data.response || data.message || data.output || responseText
+          content: data.response || data.completion || data.message || data.output || responseText
         };
         setMessages(prev => [...prev, assistantMessage]);
       }
