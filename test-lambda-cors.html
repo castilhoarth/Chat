@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Lambda CORS</title>
+</head>
+<body>
+    <h1>Test Lambda CORS</h1>
+    <button onclick="testLambda()">Test Lambda</button>
+    <pre id="result"></pre>
+
+    <script>
+        async function testLambda() {
+            const result = document.getElementById('result');
+            result.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('https://ypwcnxepbbsojadq7srouhzb2u0elkll.lambda-url.us-west-2.on.aws/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: 'test'
+                    })
+                });
+                
+                const data = await response.text();
+                result.textContent = `✅ Success!\nStatus: ${response.status}\n\nResponse:\n${data}`;
+            } catch (error) {
+                result.textContent = `❌ Error: ${error.message}\n\nThis is a CORS error. You need to enable CORS on the Lambda Function URL.`;
+            }
+        }
+    </script>
+</body>
+</html>
